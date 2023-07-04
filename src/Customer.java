@@ -17,6 +17,14 @@ public class Customer
         this.burgerAmount = burgerAmount;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getSecondName() {
+        return secondName;
+    }
+
     public String getFullName()
     {
         return firstName + " " + secondName;
