@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Main
@@ -14,6 +16,7 @@ public class Main
     public static int lastElement;
     public static Date saveTime = new Date();
     public static int reservedBurgers = 50 + newBurgersCount - soldBurgers - burgerStock;
+    public static PrintWriter fileInput;
 
     // declaring an array to sort names
     public static String[] names = new String[10];
@@ -88,16 +91,16 @@ public class Main
             case "104", "PCQ" ->
                 // getting and validating queue location and then removing a served customer
                     removeServedCustomer();
-//            case "105", "VCS" -> {
-//                // sorting names in alphabetical order by using bubble sort
-//                sortNames();
-//                loopController();
-//            }
-//            case "106", "SPD" -> {
-//                // save data into the file
-//                saveFile();
-//                loopController();
-//            }
+            case "105", "VCS" -> {
+                // sorting names in alphabetical order by using bubble sort
+                sortNames();
+                loopController();
+            }
+            case "106", "SPD" -> {
+                // save data into the file
+                saveFile();
+                loopController();
+            }
 //            case "107", "LPD" -> {
 //                // load data from the file
 //                loadFile();
@@ -422,6 +425,9 @@ public class Main
                         else
                         {
                             cashier[actualQueueNumber].getCustomerQueue()[lastElement] = WaitingQueue.remove();
+                            // updating income
+                            queueIncome[actualQueueNumber] += cashier[actualQueueNumber].getCustomerQueue()[lastElement].getBurgerCount() * burgerPrice;
+                            emptySlots--;
                         }
 
                         System.out.println("Served customer was removed successfully from queue " + queueNumber);
@@ -505,6 +511,7 @@ public class Main
                                         cashier[actualQueueNumber].getCustomerQueue()[lastElement] = WaitingQueue.remove();
                                         // updating the income of the added customer
                                         queueIncome[actualQueueNumber] += cashier[actualQueueNumber].getCustomerQueue()[lastElement].getBurgerCount() * burgerPrice;
+                                        emptySlots--;
                                     }
 
                                     System.out.println("Customer was removed successfully from queue " + queueNumber);
@@ -548,115 +555,129 @@ public class Main
             System.out.println(String.format("Queue %s : Rs. %s",(i+1) ,queueIncome[i]));
         }
     }
+    public static void sortNames()
+    {
+        // adding customer names to names array
+        int l = 0;
+        for(int i = 0; i < 5; i++)
+        {
+            for(int j = 0; j < cashier.length; j++)
+            {
+                // adding ascii values of first 2 characters to asciiValues array
+                if(i >= cashier[j].getCustomerQueue().length) continue;
+                if(cashier[j].getCustomerQueue()[i] != null)
+                {
+                    names[l] = cashier[j].getCustomerQueue()[i].getFullName().toLowerCase();
+                    asciiValues[0][l] = names[l].charAt(0);
+                    if(names[l].length() > 1)
+                    {
+                        asciiValues[1][l] = names[l].charAt(1);
+                    }
+                    l++;
+                }
+            }
+        }
 
-//    static void sortNames()
-//    {
-//        // adding customer names to names array
-//        int l = 0;
-//        for(int i = 0; i < cashiers[2].length; i++)
-//        {
-//            for(int j = 0; j < cashiers.length; j++)
-//            {
-//                // adding ascii values of first 2 characters to asciiValues array
-//                if(i >= cashiers[j].length) continue;
-//                if(cashiers[j][i] != null)
-//                {
-//                    names[l] = cashiers[j][i].toLowerCase();
-//                    asciiValues[0][l] = names[l].charAt(0);
-//                    if(names[l].length() > 1)
-//                    {
-//                        asciiValues[1][l] = names[l].charAt(1);
-//                    }
-//                    l++;
-//                }
-//            }
-//        }
-//
-//        // bubble sorting first two characters of each name in ascending order
-//        for(int m = 0; m < l; m++)
-//        {
-//            if(names[m] == null || asciiValues[0][m] == 0) continue;
-//            for(int n = 0; n < l; n++)
-//            {
-//                if(asciiValues[0][m] < asciiValues[0][n] || (asciiValues[0][m] == asciiValues[0][n] && asciiValues[1][m] < asciiValues[1][n]))
-//                {
-//                    // Swapping names
-//                    String temp = names[n];
-//                    names[n] = names[m];
-//                    names[m] = temp;
-//
-//                    // Swapping first character values
-//                    int temp1 = asciiValues[0][n];
-//                    asciiValues[0][n] = asciiValues[0][m];
-//                    asciiValues[0][m] = temp1;
-//
-//                    // Swapping second character values
-//                    int temp2 = asciiValues[1][n];
-//                    asciiValues[1][n] = asciiValues[1][m];
-//                    asciiValues[1][m] = temp2;
-//                }
-//            }
-//        }
-//
-//        // printing sorted names
-//        int rank = 1;
-//        for(String name: names)
-//        {
-//            if(name != null)
-//            {
-//                System.out.println(rank +". " + name);
-//                rank++;
-//            }
-//        }
-//    }
-//
-//    static void saveFile()
-//    {
-//        try {
-//            // creating and writing into the file
-//            PrintWriter fileInput = new PrintWriter("FFQMS-Data.txt");
-//
-//            // writing first half
-//            String firstHalf = String.format("""
-//                            -------------------------------------->  Foodies Fave Queue Management System Data  <-------------------------------------- \n \n
-//                            Last Saved             ; %s \n
-//                            Sold Burger Count      : %s
-//                            Reserved Burger Count  : %s
-//                            Remaining Burger Count : %s \n
-//                            ----------------------------------------------------- Cashier Queues ------------------------------------------------------ \n
-//                            """, saveTime, soldBurgers, reservedBurgers, burgerStock);
-//
-//            fileInput.write(firstHalf);
-//
-//            // writing cashier data
-//            for (int i = 0; i < 3; i++) {
-//                fileInput.write("Cashier " + (i + 1) + "              : ");
-//                for (int j = 0; j < 5; j++) {
-//                    if (j >= cashiers[i].length) continue;
-//                    fileInput.print(cashiers[i][j] + "  ");
-//                }
-//                fileInput.println(" ");
-//            }
-//
-//            // writing second half
-//            String secondHalf = String.format("""
-//                            No. of Empty slots     : %s \n
-//                            --------------------------------------------------------------------------------------------------------------------------- \n
-//                            Served Customers Count : %s \n \n \n
-//                                                                                   * * * * * *
-//                            """, emptySlots, servedCustomerCount);
-//            fileInput.write(secondHalf);
-//
-//            // closing file connection
-//            fileInput.close();
-//
-//            System.out.println("Saved successfully to the file");
-//            loopController();
-//        } catch (IOException e) {
-//            System.out.println("An error occurred");
-//        }
-//    }
-//
+        // bubble sorting up to two characters of each name in ascending order
+        for(int m = 0; m < l; m++)
+        {
+            if(names[m] == null || asciiValues[0][m] == 0) continue;
+            for(int n = 0; n < l; n++)
+            {
+                if(asciiValues[0][m] < asciiValues[0][n] || (asciiValues[0][m] == asciiValues[0][n] && asciiValues[1][m] < asciiValues[1][n]))
+                {
+                    // Swapping names
+                    String temp = names[n];
+                    names[n] = names[m];
+                    names[m] = temp;
+
+                    // Swapping first character values
+                    int temp1 = asciiValues[0][n];
+                    asciiValues[0][n] = asciiValues[0][m];
+                    asciiValues[0][m] = temp1;
+
+                    // Swapping second character values
+                    int temp2 = asciiValues[1][n];
+                    asciiValues[1][n] = asciiValues[1][m];
+                    asciiValues[1][m] = temp2;
+                }
+            }
+        }
+
+        // printing sorted names
+        int rank = 1;
+        for(String name: names)
+        {
+            if(name != null)
+            {
+                String fName = name.split(" ")[0].substring(0,1).toUpperCase() + name.split(" ")[0].substring(1);
+                String sName = name.split(" ")[1].substring(0,1).toUpperCase() + name.split(" ")[1].substring(1);
+                System.out.println(rank + ". " + fName + " " + sName);
+                rank++;
+            }
+        }
+    }
+
+    public static void saveFile()
+    {
+        try {
+            // creating and writing into the file
+            fileInput = new PrintWriter("FFQMS-Data.txt");
+
+            // writing first half
+            String firstHalf = String.format("""
+                            -------------------------------------->  Foodies Fave Queue Management System Data  <-------------------------------------- \n \n
+                            Last Saved                     ; %s \n
+                            Remaining Burger Count         : %s
+                            Reserved Burger Count          : %s
+                            Sold Burger Count              : %s 
+                            Served Customers Count         : %s\n
+                            ----------------------------------------------------- Cashier Queues ------------------------------------------------------ \n
+                            """, saveTime, burgerStock, reservedBurgers, soldBurgers, servedCustomerCount);
+
+            fileInput.write(firstHalf);
+
+            // writing cashier data
+            for (int i = 0; i < 3; i++)
+            {
+                fileInput.write(String.format("Cashier %s   -   [Rs. %05d]    : ",(i + 1) ,queueIncome[i]));
+                for (int j = 0; j < 5; j++)
+                {
+                    if (j >= cashier[i].getCustomerQueue().length) continue;
+                    if(cashier[i].getCustomerQueue()[j] != null)
+                    {
+                        nameCapitalization(cashier[i].getCustomerQueue()[j].getFullName().split(" "));
+                        if(j + 1 != cashier[i].getCustomerQueue().length)
+                        {
+                            if(cashier[i].getCustomerQueue()[j + 1] != null) fileInput.print(", ");
+                        }
+                    }
+                }
+                fileInput.println(" ");
+            }
+
+            // writing second half
+            String secondHalf = String.format("""
+                            \nNo.of Empty Slots              : %s \n
+                            ------------------------------------------------------ Waiting Queue ------------------------------------------------------ \n
+                            No.of Waiting Queue Customers  : %s\n
+                            """, emptySlots,WaitingQueue.nItems);
+            fileInput.write(secondHalf);
+
+            // writing customers in waiting queue
+            WaitingQueue.getWaitingQueueCustomers();
+            fileInput.print("                                                        * * * * * *");
+
+            // closing file connection
+            fileInput.close();
+
+            System.out.println("Saved successfully to the file");
+            loopController();
+        } catch (IOException e) {
+            System.out.println("An error occurred");
+        }
+    }
+
 //    static void loadFile()
 //    {
 //        try {
@@ -735,5 +756,11 @@ public class Main
                                               *** Alert ***
                             You have less than 10 burgers left, please refill !""");
         }
+    }
+    public static void nameCapitalization(String[] nameParts)
+    {
+        String fName = nameParts[0].substring(0,1).toUpperCase() + nameParts[0].substring(1);
+        String sName = nameParts[1].substring(0,1).toUpperCase() + nameParts[1].substring(1);
+        fileInput.print(fName + " " + sName);
     }
 }

@@ -1,0 +1,25 @@
+-------------------------------------->  Foodies Fave Queue Management System Data  <-------------------------------------- 
+ 
+
+Last Saved                     ; Fri Jul 07 01:47:23 IST 2023 
+
+Remaining Burger Count         : 4
+Reserved Burger Count          : 41
+Sold Burger Count              : 5
+Served Customers Count         : 1
+
+----------------------------------------------------- Cashier Queues ------------------------------------------------------ 
+
+Cashier 1   -   [Rs. 07800]    : Hiruna Bosa, Paster Jerum 
+Cashier 2   -   [Rs. 07800]    : Nirmal Cuhacaya, Raveesha Ure, Diyana Cathai 
+Cashier 3   -   [Rs. 16250]    : Chethiya Bosa, Pawani Epa, Oshadhi Mage, Lansi Mage, Cheese Mage 
+
+No.of Empty Slots              : 0 
+
+------------------------------------------------------ Waiting Queue ------------------------------------------------------ 
+
+No.of Waiting Queue Customers  : 2
+
+Customers in Waiting Queue     : Gotabya Ubetatta, Sl Pirate
+
+                                                        * * * * * *

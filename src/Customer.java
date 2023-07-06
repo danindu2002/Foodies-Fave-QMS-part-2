@@ -27,7 +27,8 @@ public class Customer
 
     public String getFullName()
     {
-        return firstName + " " + secondName;
+        if(firstName != null && secondName != null) return firstName + " " + secondName;
+        else return null;
     }
     public int getBurgerCount()
     {

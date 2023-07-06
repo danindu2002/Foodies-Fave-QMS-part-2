@@ -34,10 +34,29 @@ public class WaitingQueue
         }
         else
         {
-            Customer temp = waitingListQueue[front++];
+            Customer temp = waitingListQueue[front];
+            waitingListQueue[front] = null;
+            front++;
+
             if(front == size) front = 0;
             nItems--;
             return temp;
         }
+    }
+    public static void getWaitingQueueCustomers()
+    {
+        Main.fileInput.print("Customers in Waiting Queue     : ");
+        for(int i = 0; i < waitingListQueue.length; i++)
+        {
+            if(waitingListQueue[i] != null)
+            {
+                Main.nameCapitalization(waitingListQueue[i].getFullName().split(" "));
+                if(i + 1 != waitingListQueue.length)
+                {
+                    if(waitingListQueue[i + 1] != null) Main.fileInput.print(", ");
+                }
+            }
+        }
+        Main.fileInput.println("\n");
     }
 }
