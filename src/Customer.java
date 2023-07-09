@@ -34,4 +34,15 @@ public class Customer
     {
         return burgerAmount;
     }
+
+    // creating a customer object from each detail set and returning the customer
+    public static Customer setLoadedCustomer(String[] customerAttributes)
+    {
+        Customer customer = new Customer();
+        customer.setFirstName(customerAttributes[0].toLowerCase());
+        customer.setSecondName(customerAttributes[1].toLowerCase());
+        customer.setBurgerAmount(Integer.parseInt(customerAttributes[3]));
+
+        return customer;
+    }
 }
