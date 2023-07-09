@@ -43,20 +43,43 @@ public class WaitingQueue
             return temp;
         }
     }
-    public static void getWaitingQueueCustomers()
-    {
-        Main.fileInput.print("Customers in Waiting Queue     : ");
-        for(int i = 0; i < waitingListQueue.length; i++)
-        {
-            if(waitingListQueue[i] != null)
-            {
-                Main.nameCapitalization(waitingListQueue[i].getFullName().split(" "));
-                if(i + 1 != waitingListQueue.length)
-                {
-                    if(waitingListQueue[i + 1] != null) Main.fileInput.print(", ");
+    public static void getWaitingQueueCustomers(boolean printToFile) {
+        if (printToFile) {
+            Main.fileInput.print("Customers in Waiting Queue     : ");
+        } else {
+            System.out.print("Customers in Waiting Queue     : ");
+        }
+
+        for (int i = 0; i < waitingListQueue.length; i++) {
+            if (waitingListQueue[i] != null) {
+                String[] nameParts = Main.nameCapitalization(waitingListQueue[i].getFullName().split(" "));
+                String customerInfo = nameParts[0] + " " + nameParts[1] + " - " + waitingListQueue[i].getBurgerCount();
+
+                if (printToFile) {
+                    Main.fileInput.print(customerInfo);
+                } else {
+                    System.out.print(customerInfo);
+                }
+
+                if (i + 1 != waitingListQueue.length) {
+                    if (waitingListQueue[i + 1] != null) {
+                        if (printToFile) {
+                            Main.fileInput.print(", ");
+                        } else {
+                            System.out.print(", ");
+                        }
+                    }
                 }
             }
         }
-        Main.fileInput.println("\n");
+
+        if (printToFile) {
+            Main.fileInput.println("\n");
+        } else {
+            System.out.println("\n");
+        }
     }
+
+
 }
+

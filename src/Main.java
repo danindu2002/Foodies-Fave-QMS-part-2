@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -101,11 +102,11 @@ public class Main
                 saveFile();
                 loopController();
             }
-//            case "107", "LPD" -> {
-//                // load data from the file
-//                loadFile();
-//                loopController();
-//            }
+            case "107", "LPD" -> {
+                // load data from the file
+                loadFile();
+                loopController();
+            }
             case "108", "STK" -> {
                 // displaying remaining burger stock and low stocks alert
                 System.out.println("Remaining Burger Stock: " + burgerStock);
@@ -241,8 +242,8 @@ public class Main
                 }
             }
         }
-        if(emptySlots == 1) System.out.println(emptySlots + " slot is Empty out of " + totalSlots + "slots");
-        else System.out.println(emptySlots + " slots are Empty out of " + totalSlots + "slots");
+        if(emptySlots == 1) System.out.println(emptySlots + " slot is Empty out of " + totalSlots + " slots");
+        else System.out.println(emptySlots + " slots are Empty out of " + totalSlots + " slots");
     }
 
     public static void addCustomersToQueue()
@@ -274,48 +275,53 @@ public class Main
                             customer.setBurgerAmount(input.nextInt());
 
                             // validating burger amount
-                            if(customer.getBurgerCount() <= burgerStock && customer.getBurgerCount() > 0)
+                            if(customer.getBurgerCount() > 0)
                             {
-                                // placing in the shortest queue
-                                for(int i = 0; i < 5; i++)
-                                {
-                                    for(int j = 0; j < cashier.length; j++)
-                                    {
-                                        if(i >= cashier[j].getCustomerQueue().length) continue;
-                                        if(cashier[j].getCustomerQueue()[i] == null)
-                                        {
-                                            cashier[j].getCustomerQueue()[i] = customer;
-                                            // updating the income of each queue
-                                            queueIncome[j] += cashier[j].getCustomerQueue()[i].getBurgerCount() * burgerPrice;
-
-                                            i = 5;
-                                            break;
-                                        }
-                                    }
-                                }
                                 // adding additional customers to waiting area if all queues are full
-                                if(emptySlots == 0)
+                                if(emptySlots != 0)
                                 {
-                                    WaitingQueue.insert(customer);
+                                    if(customer.getBurgerCount() <= burgerStock)
+                                    {
+                                        // placing in the shortest queue
+                                        for(int i = 0; i < 5; i++)
+                                        {
+                                            for(int j = 0; j < cashier.length; j++)
+                                            {
+                                                if(i >= cashier[j].getCustomerQueue().length) continue;
+                                                if(cashier[j].getCustomerQueue()[i] == null)
+                                                {
+                                                    cashier[j].getCustomerQueue()[i] = customer;
+                                                    // updating the income of each queue
+                                                    queueIncome[j] += cashier[j].getCustomerQueue()[i].getBurgerCount() * burgerPrice;
+
+                                                    i = 5;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        // reserving 5 burgers for the customer and updating empty slots
+                                        burgerStock -= customer.getBurgerCount();
+                                        reservedBurgers += customer.getBurgerCount();
+                                        emptySlots--;
+                                    }
+                                    else
+                                    {
+                                        System.out.println("Unable to supply that amount of burgers");
+                                    }
                                 }
                                 else
                                 {
-                                    // reserving 5 burgers for the customer and updating empty slots
-                                    burgerStock -= customer.getBurgerCount();
-                                    reservedBurgers += customer.getBurgerCount();
-                                    emptySlots--;
+                                    WaitingQueue.insert(customer);
                                 }
 
                                 // showing the low stocks alert if the burger count is less than 10
                                 stockAlert();
-
                                 queueLoop = false;
                                 Main.loopController();
-                                break;
                             }
                             else
                             {
-                                System.out.println("Unable to supply that amount of burgers");
+                                System.out.println("Positive integer required");
                             }
                         }
                         catch (InputMismatchException e)
@@ -610,9 +616,8 @@ public class Main
         {
             if(name != null)
             {
-                String fName = name.split(" ")[0].substring(0,1).toUpperCase() + name.split(" ")[0].substring(1);
-                String sName = name.split(" ")[1].substring(0,1).toUpperCase() + name.split(" ")[1].substring(1);
-                System.out.println(rank + ". " + fName + " " + sName);
+                String[] nameParts = nameCapitalization(name.split(" "));
+                System.out.println(rank + ". " + nameParts[0] + " " + nameParts[1]);
                 rank++;
             }
         }
@@ -630,42 +635,26 @@ public class Main
                             Last Saved                     ; %s \n
                             Remaining Burger Count         : %s
                             Reserved Burger Count          : %s
-                            Sold Burger Count              : %s 
-                            Served Customers Count         : %s\n
+                            Sold Burger Count              : %s
+                            Served Customers Count         : %s \n
                             ----------------------------------------------------- Cashier Queues ------------------------------------------------------ \n
                             """, saveTime, burgerStock, reservedBurgers, soldBurgers, servedCustomerCount);
 
             fileInput.write(firstHalf);
 
             // writing cashier data
-            for (int i = 0; i < 3; i++)
-            {
-                fileInput.write(String.format("Cashier %s   -   [Rs. %05d]    : ",(i + 1) ,queueIncome[i]));
-                for (int j = 0; j < 5; j++)
-                {
-                    if (j >= cashier[i].getCustomerQueue().length) continue;
-                    if(cashier[i].getCustomerQueue()[j] != null)
-                    {
-                        nameCapitalization(cashier[i].getCustomerQueue()[j].getFullName().split(" "));
-                        if(j + 1 != cashier[i].getCustomerQueue().length)
-                        {
-                            if(cashier[i].getCustomerQueue()[j + 1] != null) fileInput.print(", ");
-                        }
-                    }
-                }
-                fileInput.println(" ");
-            }
+            writeCashierData(true);
 
             // writing second half
             String secondHalf = String.format("""
                             \nNo.of Empty Slots              : %s \n
                             ------------------------------------------------------ Waiting Queue ------------------------------------------------------ \n
-                            No.of Waiting Queue Customers  : %s\n
+                            No.of Waiting Queue Customers  : %s \n
                             """, emptySlots,WaitingQueue.nItems);
             fileInput.write(secondHalf);
 
             // writing customers in waiting queue
-            WaitingQueue.getWaitingQueueCustomers();
+            WaitingQueue.getWaitingQueueCustomers(true);
             fileInput.print("                                                        * * * * * *");
 
             // closing file connection
@@ -678,68 +667,93 @@ public class Main
         }
     }
 
-//    static void loadFile()
-//    {
-//        try {
-//            // opening and reading from the file
-//            File file = new File("FFQMS-Data.txt");
-//            Scanner fileReader = new Scanner(file);
-//
-//            // initializing variables
-//            String line;
-//            String saveTime = "";
-//            int cashierIndex = 0;
-//
-//            // reading and adding values to all variables
-//            while (fileReader.hasNextLine()) {
-//                line = fileReader.nextLine();
-//
-//                if (line.startsWith("Last Saved")) {
-//                    saveTime = line.split(";")[1].trim();
-//                } else if (line.startsWith("Sold Burger Count")) {
-//                    soldBurgers = Integer.parseInt(line.split(":")[1].trim());
-//                } else if (line.startsWith("Reserved Burger Count")) {
-//                    reservedBurgers = Integer.parseInt(line.split(":")[1].trim());
-//                } else if (line.startsWith("Remaining Burger Count")) {
-//                    burgerStock = Integer.parseInt(line.split(":")[1].trim());
-//                } else if (line.startsWith("No. of Empty slots")) {
-//                    emptySlots = Integer.parseInt(line.split(":")[1].trim());
-//                } else if (line.startsWith("Served Customers Count")) {
-//                    servedCustomerCount = Integer.parseInt(line.split(":")[1].trim());
-//                }
-//                // reading and adding values to cashier array
-//                else if (line.startsWith("Cashier")) {
-//                    String[] queueTokens = line.split(":")[1].trim().split("\\s+");
-//                    for (int i = 0; i < queueTokens.length; i++) {
-//                        if (!queueTokens[i].equals("null")) {
-//                            cashiers[cashierIndex][i] = queueTokens[i];
-//                        }
-//                    }
-//                    cashierIndex++;
-//                }
-//            }
-//            fileReader.close();
-//
-//            // printing saved data into the console
-//            String fileOutput = String.format("""
-//                                    -------------------- Loaded Data -------------------- \n
-//                                    Last Saved             : %s \n
-//                                    Sold Burger Count      : %s
-//                                    Reserved Burger Count  : %s
-//                                    Remaining Burger Count : %s \n
-//                                    No. of Empty Queues    : %s
-//                                    Served Customers Count : %s \n
-//                                    Cashier 1              : %s
-//                                    Cashier 2              : %s
-//                                    Cashier 3              : %s
-//                                    """, saveTime, soldBurgers, reservedBurgers, burgerStock, emptySlots, servedCustomerCount,
-//                    Arrays.toString(cashiers[0]), Arrays.toString(cashiers[1]), Arrays.toString(cashiers[2]));
-//            System.out.println(fileOutput);
-//        } catch (IOException e) {
-//            System.out.println("An error occurred while reading the file");
-//        }
-//    }
-//
+    public static void loadFile()
+    {
+        try {
+            // opening and reading from the file
+            File file = new File("FFQMS-Data.txt");
+            Scanner fileReader = new Scanner(file);
+
+            // initializing variables
+            String line;
+            String saveTime = "";
+            int cashierIndex = 0;
+
+            // reading and adding values to all variables
+            while (fileReader.hasNextLine()) {
+                line = fileReader.nextLine();
+
+                if (line.startsWith("Last Saved")) {
+                    saveTime = line.split(";")[1].trim();
+                } else if (line.startsWith("Remaining Burger Count")) {
+                    burgerStock = Integer.parseInt(line.split(":")[1].trim());
+                } else if (line.startsWith("Reserved Burger Count")) {
+                    reservedBurgers = Integer.parseInt(line.split(":")[1].trim());
+                } else if (line.startsWith("Sold Burger Count")) {
+                    soldBurgers = Integer.parseInt(line.split(":")[1].trim());
+                } else if (line.startsWith("Served Customers Count")) {
+                    servedCustomerCount = Integer.parseInt(line.split(":")[1].trim());
+                } else if (line.startsWith("No.of Empty Slots")) {
+                    emptySlots = Integer.parseInt(line.split(":")[1].trim());
+                } else if (line.startsWith("No.of Waiting Queue Customers")) {
+                    WaitingQueue.nItems = Integer.parseInt(line.split(":")[1].trim());
+                }
+                // reading and adding values to cashier array
+                else if (line.startsWith("Cashier")) {
+                    String[] queueTokens = line.split(":")[1].trim().split(", ");
+                    queueIncome[cashierIndex] = Integer.parseInt(line.split(">")[1].trim().split("\\s+")[1].trim());
+
+                    for (int j = 0; j < queueTokens.length; j++)
+                    {
+                        if(queueTokens[j] == "") break;
+                        String[] customerAttributes = queueTokens[j].split("\\s+");
+                        cashier[cashierIndex].getCustomerQueue()[j] = setLoadedCustomer(customerAttributes);
+                    }
+                    cashierIndex++;
+                }
+
+                else if(line.startsWith("Customers in Waiting Queue")){
+                    String[] waitingQueueTokens = line.split(":")[1].trim().split(", ");
+                    for(int i = 0; i < waitingQueueTokens.length; i++)
+                    {
+                        if(waitingQueueTokens[i] == "") break;
+                        String[] waitingCustomerAttributes = waitingQueueTokens[i].split("\\s+");
+                        WaitingQueue.insert(setLoadedCustomer(waitingCustomerAttributes));
+                        WaitingQueue.nItems--;
+                    }
+                    break;
+                }
+            }
+            fileReader.close();
+
+            // printing saved data into the console
+            String fileOutput = String.format("""
+                    ----------------------------------->  Foodies Fave Queue Management Loaded System Data  <---------------------------------- \n
+                    Last Saved                     : %s \n
+                    Remaining Burger Count         : %s
+                    Reserved Burger Count          : %s
+                    Sold Burger Count              : %s
+                    Served Customers Count         : %s \n
+                    ----------------------------------------------------- Cashier Queues ------------------------------------------------------ \n
+                    """, saveTime, burgerStock, reservedBurgers, soldBurgers, servedCustomerCount);
+            System.out.println(fileOutput);
+
+            writeCashierData(false);
+
+            System.out.println(String.format("""
+                    \nNo.of Empty Slots              : %s \n
+                    ------------------------------------------------------ Waiting Queue ------------------------------------------------------ \n
+                    No.of Waiting Queue Customers  : %s 
+                    """,emptySlots, WaitingQueue.nItems));
+
+            WaitingQueue.getWaitingQueueCustomers(false);
+
+
+        } catch (IOException e) {
+            System.out.println("An error occurred while reading the file");
+        }
+    }
+
     public static void getQueue()
     {
         System.out.print("Enter queue: ");
@@ -757,10 +771,60 @@ public class Main
                             You have less than 10 burgers left, please refill !""");
         }
     }
-    public static void nameCapitalization(String[] nameParts)
+    public static String[] nameCapitalization(String[] nameParts)
     {
         String fName = nameParts[0].substring(0,1).toUpperCase() + nameParts[0].substring(1);
         String sName = nameParts[1].substring(0,1).toUpperCase() + nameParts[1].substring(1);
-        fileInput.print(fName + " " + sName);
+        String[] capitalizedNames = {fName, sName};
+        return capitalizedNames;
+    }
+    public static void writeCashierData(boolean printToFile) {
+        for (int i = 0; i < 3; i++) {
+            if (printToFile) {
+                Main.fileInput.write(String.format("Cashier %s   >   Rs. %05d      : ", (i + 1), queueIncome[i]));
+            } else {
+                System.out.printf("Cashier %s   >   Rs. %05d      : ", (i + 1), queueIncome[i]);
+            }
+
+            for (int j = 0; j < 5; j++) {
+                if (j >= cashier[i].getCustomerQueue().length) continue;
+                if (cashier[i].getCustomerQueue()[j] != null) {
+                    String[] nameParts = nameCapitalization(cashier[i].getCustomerQueue()[j].getFullName().split(" "));
+                    String customerInfo = nameParts[0] + " " + nameParts[1] + " - " + cashier[i].getCustomerQueue()[j].getBurgerCount();
+
+                    if (printToFile) {
+                        Main.fileInput.print(customerInfo);
+                    } else {
+                        System.out.print(customerInfo);
+                    }
+
+                    if (j + 1 != cashier[i].getCustomerQueue().length) {
+                        if (cashier[i].getCustomerQueue()[j + 1] != null) {
+                            if (printToFile) {
+                                Main.fileInput.print(", ");
+                            } else {
+                                System.out.print(", ");
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (printToFile) {
+                Main.fileInput.println(" ");
+            } else {
+                System.out.println(" ");
+            }
+        }
+    }
+
+    public static Customer setLoadedCustomer(String[] customerAttributes)
+    {
+        Customer customer = new Customer();
+        customer.setFirstName(customerAttributes[0].toLowerCase());
+        customer.setSecondName(customerAttributes[1].toLowerCase());
+        customer.setBurgerAmount(Integer.parseInt(customerAttributes[3]));
+
+        return customer;
     }
 }
