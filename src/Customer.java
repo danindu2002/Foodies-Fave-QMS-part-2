@@ -30,7 +30,7 @@ public class Customer
         if(firstName != null && secondName != null) return firstName + " " + secondName;
         else return null;
     }
-    public int getBurgerCount()
+    public int getBurgerAmount()
     {
         return burgerAmount;
     }

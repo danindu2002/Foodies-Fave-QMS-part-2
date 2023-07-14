@@ -16,7 +16,7 @@ public class Main
     public static FoodQueue[] cashier = new FoodQueue[3];
 
     // declaring a WaitingQueue type array to store maximum 10 customers in the waiting area
-    public static WaitingQueue waitingQueue = new WaitingQueue(10);
+    public static WaitingQueue waitingQueue = new WaitingQueue();
     public static void main(String[] args)
     {
         // initializing 3 FoodQueue objects to store each queue
@@ -66,7 +66,7 @@ public class Main
                 loopController();
             }
             // adding customers to queue and validating user inputs
-            case "102", "ACQ" -> addCustomersToQueue();
+            case "102", "ACQ" -> FoodQueue.addCustomersToQueue();
 
             // validating user inputs and removing a customer without serving
             case "103", "RCQ" -> FoodQueue.removeCustomer();
@@ -141,104 +141,6 @@ public class Main
         {
             System.out.print("Invalid answer");
             loopController();
-        }
-    }
-
-    public static void addCustomersToQueue()
-    {
-        boolean nameLoop = true;
-        boolean queueLoop = true;
-        while(nameLoop)
-        {
-            Customer customer = new Customer();
-
-            // checking that at least one burger is available or not
-            if (burgerStock > 0)
-            {
-                System.out.print("Enter First Name: ");
-                customer.setFirstName(input.next());
-                System.out.print("Enter Second Name: ");
-                customer.setSecondName(input.next());
-
-                // validating the customer name as only alphabetical
-                if (customer.getFirstName().matches("^[a-zA-Z]*$") && customer.getSecondName().matches("^[a-zA-Z]*$"))
-                {
-                    nameLoop = false;
-                    while(queueLoop)
-                    {
-                        // validating user input only as an integer
-                        try
-                        {
-                            System.out.print("Enter Burger Amount: ");
-                            customer.setBurgerAmount(input.nextInt());
-
-                            // validating burger amount
-                            if(customer.getBurgerCount() > 0)
-                            {
-                                // adding additional customers to waiting area if all queues are full
-                                if(FoodQueue.emptySlots != 0)
-                                {
-                                    if(customer.getBurgerCount() <= burgerStock)
-                                    {
-                                        // placing in the shortest queue
-                                        for(int i = 0; i < 5; i++)
-                                        {
-                                            for(int j = 0; j < cashier.length; j++)
-                                            {
-                                                if(i >= cashier[j].getCustomerQueue().length) continue;
-                                                if(cashier[j].getCustomerQueue()[i] == null)
-                                                {
-                                                    cashier[j].getCustomerQueue()[i] = customer;
-                                                    // updating the income of each queue
-                                                    FoodQueue.queueIncome[j] += cashier[j].getCustomerQueue()[i].getBurgerCount() * FoodQueue.burgerPrice;
-
-                                                    i = 5;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                        // reserving 5 burgers for the customer and updating empty slots
-                                        burgerStock -= customer.getBurgerCount();
-                                        FoodQueue.reservedBurgers += customer.getBurgerCount();
-                                        FoodQueue.emptySlots--;
-                                    }
-                                    else
-                                    {
-                                        System.out.println("Unable to supply that amount of burgers");
-                                    }
-                                }
-                                else
-                                {
-                                    // adding to waiting queue
-                                    WaitingQueue.insert(customer);
-                                }
-                                // showing the low stocks alert if the burger count is less than 10
-                                stockAlert();
-                                queueLoop = false;
-                                Main.loopController();
-                            }
-                            else
-                            {
-                                System.out.println("Positive integer required");
-                            }
-                        }
-                        catch (InputMismatchException e)
-                        {
-                            System.out.println("Integer required");
-                            Main.input.next();
-                        }
-                    }
-                }
-                else
-                {
-                    System.out.println("Please enter alphabetical letters only");
-                }
-            }
-            else
-            {
-                System.out.println("Burger stock is insufficient, Please Refill!");
-                Main.loopController();
-            }
         }
     }
 
@@ -349,6 +251,8 @@ public class Main
             String line;
             String saveTime = "";
             int cashierIndex = 0;
+            WaitingQueue.front = 0;
+            WaitingQueue.rear = -1;
 
             // reading and adding values to all variables
             while (fileReader.hasNextLine())
@@ -384,7 +288,7 @@ public class Main
 
                     for (int j = 0; j < queueTokens.length; j++)
                     {
-                        if(queueTokens[j] == "") break;
+                        if(queueTokens[j].equals("")) break;
                         String[] customerAttributes = queueTokens[j].split("\\s+");
                         cashier[cashierIndex].getCustomerQueue()[j] = Customer.setLoadedCustomer(customerAttributes);
                     }
@@ -396,7 +300,7 @@ public class Main
                     String[] waitingQueueTokens = line.split(":")[1].trim().split(", ");
                     for(int i = 0; i < waitingQueueTokens.length; i++)
                     {
-                        if(waitingQueueTokens[i] == "") break;
+                        if(waitingQueueTokens[i].equals("")) break;
                         String[] waitingCustomerAttributes = waitingQueueTokens[i].split("\\s+");
                         // inserting customer objects to the waitingQueue
                         WaitingQueue.insert(Customer.setLoadedCustomer(waitingCustomerAttributes));

@@ -117,103 +117,103 @@ public class FoodQueue
         else System.out.println(emptySlots + " slots are Empty out of " + totalSlots + " slots");
     }
 
-//    public static void addCustomersToQueue()
-//    {
-//        boolean nameLoop = true;
-//        boolean queueLoop = true;
-//        while(nameLoop)
-//        {
-//            Customer customer = new Customer();
-//
-//            // checking that at least one burger is available or not
-//            if (Main.burgerStock > 0)
-//            {
-//                System.out.print("Enter First Name: ");
-//                customer.setFirstName(Main.input.next());
-//                System.out.print("Enter Second Name: ");
-//                customer.setSecondName(Main.input.next());
-//
-//                // validating the customer name as only alphabetical
-//                if (customer.getFirstName().matches("^[a-zA-Z]*$") && customer.getSecondName().matches("^[a-zA-Z]*$"))
-//                {
-//                    nameLoop = false;
-//                    while(queueLoop)
-//                    {
-//                        // validating user input only as an integer
-//                        try
-//                        {
-//                            System.out.print("Enter Burger Amount: ");
-//                            customer.setBurgerAmount(Main.input.nextInt());
-//
-//                            // validating burger amount
-//                            if(customer.getBurgerCount() > 0)
-//                            {
-//                                // adding additional customers to waiting area if all queues are full
-//                                if(emptySlots != 0)
-//                                {
-//                                    if(customer.getBurgerCount() <= Main.burgerStock)
-//                                    {
-//                                        // placing in the shortest queue
-//                                        for(int i = 0; i < 5; i++)
-//                                        {
-//                                            for(int j = 0; j < Main.cashier.length; j++)
-//                                            {
-//                                                if(i >= Main.cashier[j].getCustomerQueue().length) continue;
-//                                                if(Main.cashier[j].getCustomerQueue()[i] == null)
-//                                                {
-//                                                    Main.cashier[j].getCustomerQueue()[i] = customer;
-//                                                    // updating the income of each queue
-//                                                    queueIncome[j] += Main.cashier[j].getCustomerQueue()[i].getBurgerCount() * burgerPrice;
-//
-//                                                    i = 5;
-//                                                    break;
-//                                                }
-//                                            }
-//                                        }
-//                                        // reserving 5 burgers for the customer and updating empty slots
-//                                        Main.burgerStock -= customer.getBurgerCount();
-//                                        reservedBurgers += customer.getBurgerCount();
-//                                        emptySlots--;
-//                                    }
-//                                    else
-//                                    {
-//                                        System.out.println("Unable to supply that amount of burgers");
-//                                    }
-//                                }
-//                                else
-//                                {
-//                                    // adding to waiting queue
-//                                    WaitingQueue.insert(customer);
-//                                }
-//                                // showing the low stocks alert if the burger count is less than 10
-//                                Main.stockAlert();
-//                                queueLoop = false;
-//                                Main.loopController();
-//                            }
-//                            else
-//                            {
-//                                System.out.println("Positive integer required");
-//                            }
-//                        }
-//                        catch (InputMismatchException e)
-//                        {
-//                            System.out.println("Integer required");
-//                            Main.input.next();
-//                        }
-//                    }
-//                }
-//                else
-//                {
-//                    System.out.println("Please enter alphabetical letters only");
-//                }
-//            }
-//            else
-//            {
-//                System.out.println("Burger stock is insufficient, Please Refill!");
-//                Main.loopController();
-//            }
-//        }
-//    }
+    public static void addCustomersToQueue()
+    {
+        boolean nameLoop = true;
+        boolean queueLoop = true;
+        while(nameLoop)
+        {
+            Customer customer = new Customer();
+
+            // checking that at least one burger is available or not
+            if (Main.burgerStock > 0)
+            {
+                System.out.print("Enter First Name: ");
+                customer.setFirstName(Main.input.next());
+                System.out.print("Enter Second Name: ");
+                customer.setSecondName(Main.input.next());
+
+                // validating the customer name as only alphabetical
+                if (customer.getFirstName().matches("^[a-zA-Z]*$") && customer.getSecondName().matches("^[a-zA-Z]*$"))
+                {
+                    nameLoop = false;
+                    while(queueLoop)
+                    {
+                        // validating user input only as an integer
+                        try
+                        {
+                            System.out.print("Enter Burger Amount: ");
+                            customer.setBurgerAmount(Main.input.nextInt());
+
+                            // validating burger amount
+                            if(customer.getBurgerAmount() > 0)
+                            {
+                                // adding additional customers to waiting area if all queues are full
+                                if(emptySlots != 0)
+                                {
+                                    if(customer.getBurgerAmount() <= Main.burgerStock)
+                                    {
+                                        // placing in the shortest queue
+                                        for(int i = 0; i < 5; i++)
+                                        {
+                                            for(int j = 0; j < Main.cashier.length; j++)
+                                            {
+                                                if(i >= Main.cashier[j].getCustomerQueue().length) continue;
+                                                if(Main.cashier[j].getCustomerQueue()[i] == null)
+                                                {
+                                                    Main.cashier[j].getCustomerQueue()[i] = customer;
+                                                    // updating the income of each queue
+                                                    queueIncome[j] += Main.cashier[j].getCustomerQueue()[i].getBurgerAmount() * burgerPrice;
+
+                                                    i = 5;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                        // reserving 5 burgers for the customer and updating empty slots
+                                        Main.burgerStock -= customer.getBurgerAmount();
+                                        reservedBurgers += customer.getBurgerAmount();
+                                        emptySlots--;
+                                    }
+                                    else
+                                    {
+                                        System.out.println("Unable to supply that amount of burgers");
+                                    }
+                                }
+                                else
+                                {
+                                    // adding to waiting queue
+                                    WaitingQueue.insert(customer);
+                                }
+                                // showing the low stocks alert if the burger count is less than 10
+                                Main.stockAlert();
+                                queueLoop = false;
+                                Main.loopController();
+                            }
+                            else
+                            {
+                                System.out.println("Positive integer required");
+                            }
+                        }
+                        catch (InputMismatchException e)
+                        {
+                            System.out.println("Integer required");
+                            Main.input.next();
+                        }
+                    }
+                }
+                else
+                {
+                    System.out.println("Please enter alphabetical letters only");
+                }
+            }
+            else
+            {
+                System.out.println("Burger stock is insufficient, Please Refill!");
+                Main.loopController();
+            }
+        }
+    }
 
     public static void removeServedCustomer()
     {
@@ -234,10 +234,10 @@ public class FoodQueue
                     if(Main.cashier[actualQueueNumber].getCustomerQueue()[0] != null)
                     {
                         // updating sold burger count, served customer count, empty slots, reserved burgers variables
-                        soldBurgers += Main.cashier[actualQueueNumber].getCustomerQueue()[0].getBurgerCount();
+                        soldBurgers += Main.cashier[actualQueueNumber].getCustomerQueue()[0].getBurgerAmount();
                         servedCustomerCount +=1;
                         emptySlots++;
-                        reservedBurgers -= Main.cashier[actualQueueNumber].getCustomerQueue()[0].getBurgerCount();
+                        reservedBurgers -= Main.cashier[actualQueueNumber].getCustomerQueue()[0].getBurgerAmount();
 
                         // removing first one and updating others
                         for(int k = 0; k < lastElement; k++)
@@ -246,17 +246,7 @@ public class FoodQueue
                         }
 
                         // adding customers from waiting area to queue if they exist
-                        if(WaitingQueue.nItems == 0)
-                        {
-                            Main.cashier[actualQueueNumber].getCustomerQueue()[lastElement] = null;   /* updating the last one in the queue as empty */
-                        }
-                        else
-                        {
-                            Main.cashier[actualQueueNumber].getCustomerQueue()[lastElement] = WaitingQueue.remove();
-                            // updating income and empty slots
-                            queueIncome[actualQueueNumber] += Main.cashier[actualQueueNumber].getCustomerQueue()[lastElement].getBurgerCount() * burgerPrice;
-                            emptySlots--;
-                        }
+                        waitingToCashier(lastElement);
                         System.out.println("Served customer was removed successfully from queue " + queueNumber);
                         loop = false;
                         Main.loopController();
@@ -315,12 +305,12 @@ public class FoodQueue
                                 if(removedCustomer != null)
                                 {
                                     // increasing the burger count as the customer had not been served
-                                    Main.burgerStock += removedCustomer.getBurgerCount();
-                                    reservedBurgers -= removedCustomer.getBurgerCount();
+                                    Main.burgerStock += removedCustomer.getBurgerAmount();
+                                    reservedBurgers -= removedCustomer.getBurgerAmount();
                                     emptySlots++;
 
                                     // decreasing the income of the removed customer
-                                    queueIncome[actualQueueNumber] -= removedCustomer.getBurgerCount() * burgerPrice;
+                                    queueIncome[actualQueueNumber] -= removedCustomer.getBurgerAmount() * burgerPrice;
 
                                     for(int k = actualPosition; k < lastElement; k++)
                                     {
@@ -328,17 +318,7 @@ public class FoodQueue
                                     }
 
                                     // adding customers from waiting area to queue if they exist
-                                    if(WaitingQueue.nItems == 0)
-                                    {
-                                        Main.cashier[actualQueueNumber].getCustomerQueue()[lastElement] = null;   /* updating the last one in the queue as empty */
-                                    }
-                                    else
-                                    {
-                                        Main.cashier[actualQueueNumber].getCustomerQueue()[lastElement] = WaitingQueue.remove();
-                                        // updating the income of the added customer
-                                        queueIncome[actualQueueNumber] += Main.cashier[actualQueueNumber].getCustomerQueue()[lastElement].getBurgerCount() * burgerPrice;
-                                        emptySlots--;
-                                    }
+                                    waitingToCashier(lastElement);
 
                                     System.out.println("Customer was removed successfully from queue " + queueNumber);
                                     loop4 = false;
@@ -463,7 +443,7 @@ public class FoodQueue
                 if (Main.cashier[i].getCustomerQueue()[j] != null)
                 {
                     String[] nameParts = Main.nameCapitalization(Main.cashier[i].getCustomerQueue()[j].getFullName().split(" "));
-                    String customerInfo = nameParts[0] + " " + nameParts[1] + " - " + Main.cashier[i].getCustomerQueue()[j].getBurgerCount();
+                    String customerInfo = nameParts[0] + " " + nameParts[1] + " - " + Main.cashier[i].getCustomerQueue()[j].getBurgerAmount();
 
                     if (printToFile)  Main.fileInput.print(customerInfo);
                     else  System.out.print(customerInfo);
@@ -478,6 +458,23 @@ public class FoodQueue
             }
             if (printToFile)  Main.fileInput.println(" ");
             else  System.out.println(" ");
+        }
+    }
+
+    // adding customers from waiting area to queue if they exist
+    public static void waitingToCashier(int lastElement)
+    {
+
+        if(WaitingQueue.nItems == 0)
+        {
+            Main.cashier[actualQueueNumber].getCustomerQueue()[lastElement] = null;   /* updating the last one in the queue as empty */
+        }
+        else
+        {
+            Main.cashier[actualQueueNumber].getCustomerQueue()[lastElement] = WaitingQueue.remove();
+            // updating the income of the added customer
+            queueIncome[actualQueueNumber] += Main.cashier[actualQueueNumber].getCustomerQueue()[lastElement].getBurgerAmount() * burgerPrice;
+            emptySlots--;
         }
     }
 
