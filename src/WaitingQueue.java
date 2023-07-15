@@ -74,4 +74,3 @@ public class WaitingQueue
         else  System.out.println("\n");
     }
 }
-

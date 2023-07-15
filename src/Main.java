@@ -325,11 +325,13 @@ public class Main
             // printing cashier data
             FoodQueue.writeCashierData(false);
 
-            System.out.println(String.format("""
-                    \nNo.of Empty Slots              : %s \n
-                    ------------------------------------------------------ Waiting Queue ------------------------------------------------------ \n
-                    No.of Waiting Queue Customers  : %s 
-                    """, FoodQueue.emptySlots, WaitingQueue.nItems));
+            System.out.printf("""              
+                    \nNo.of Empty Slots              : %s
+                                        
+                    ------------------------------------------------------ Waiting Queue ------------------------------------------------------
+                                        
+                    No.of Waiting Queue Customers  : %s
+                    %n""", FoodQueue.emptySlots, WaitingQueue.nItems);
 
             // printing waiting queue data
             WaitingQueue.getWaitingQueueCustomers(false);

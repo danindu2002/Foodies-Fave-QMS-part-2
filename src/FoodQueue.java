@@ -40,10 +40,7 @@ public class FoodQueue
                 System.out.println("*    Cashiers    *");
                 continue;
             }
-            for(int j = 0; j < 18; j++)
-            {
-                System.out.print("*");
-            }
+            for(int j = 0; j < 18; j++) System.out.print("*");
             System.out.println("");
         }
     }
@@ -60,14 +57,8 @@ public class FoodQueue
                     System.out.print("      ");
                     continue;
                 }
-                if(Main.cashier[j].getCustomerQueue()[i] == null)
-                {
-                    System.out.print("  X   ");
-                }
-                else
-                {
-                    System.out.print("  O   ");
-                }
+                if(Main.cashier[j].getCustomerQueue()[i] == null)  System.out.print("  X   ");
+                else  System.out.print("  O   ");
             }
             System.out.println("");
         }
@@ -89,14 +80,8 @@ public class FoodQueue
                     System.out.print("      ");
                     continue;
                 }
-                if(Main.cashier[j].getCustomerQueue()[i] == null)
-                {
-                    System.out.print("  X   ");
-                }
-                else
-                {
-                    System.out.print("      ");
-                }
+                if(Main.cashier[j].getCustomerQueue()[i] == null)  System.out.print("  X   ");
+                else  System.out.print("      ");
             }
             System.out.println("");
         }
@@ -170,7 +155,7 @@ public class FoodQueue
                                                 }
                                             }
                                         }
-                                        // reserving 5 burgers for the customer and updating empty slots
+                                        // reserving burgers for the customer and updating empty slots
                                         Main.burgerStock -= customer.getBurgerAmount();
                                         reservedBurgers += customer.getBurgerAmount();
                                         emptySlots--;
@@ -360,7 +345,7 @@ public class FoodQueue
         System.out.println("---- Estimated income from the customers in each queue ----\n");
         for(int i = 0; i < queueIncome.length; i++)
         {
-            System.out.println(String.format("Queue %s : Rs. %s",(i+1) ,queueIncome[i]));
+            System.out.printf("Queue %s : Rs. %s%n",(i+1) ,queueIncome[i]);
         }
     }
 
@@ -448,7 +433,7 @@ public class FoodQueue
                     if (printToFile)  Main.fileInput.print(customerInfo);
                     else  System.out.print(customerInfo);
 
-                    // printing a "," if it is not the last one
+                    // printing a "," if it's not the last one
                     if (j + 1 != Main.cashier[i].getCustomerQueue().length && Main.cashier[i].getCustomerQueue()[j + 1] != null)
                     {
                         if (printToFile)  Main.fileInput.print(", ");
@@ -485,4 +470,3 @@ public class FoodQueue
         queueNumber = Main.input.nextInt();
     }
 }
-
