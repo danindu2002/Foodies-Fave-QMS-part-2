@@ -172,12 +172,12 @@ public class Main
                         burgerStock -= newBurgersCount;
                         if ((50 - burgerStock) == 0)
                         {
-                            System.out.println("Maximum stock count exceeded");
+                            System.out.println("Stocks full");
                             loopController();
                         }
 
                         // showing the maximum amount of burgers that can be added
-                        System.out.println("Maximum stock count exceeded, " + (50 - burgerStock) + " burgers can be added");
+                        System.out.println("Maximum stocks exceeded, " + (50 - burgerStock) + " burgers can be added");
                     }
                 }
                 else

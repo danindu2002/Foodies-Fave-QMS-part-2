@@ -147,6 +147,7 @@ public class FoodQueue
                                                 if(Main.cashier[j].getCustomerQueue()[i] == null)
                                                 {
                                                     Main.cashier[j].getCustomerQueue()[i] = customer;
+                                                    System.out.println("Customer added to the queue " + (j + 1));
                                                     // updating the income of each queue
                                                     queueIncome[j] += Main.cashier[j].getCustomerQueue()[i].getBurgerAmount() * burgerPrice;
 
@@ -169,6 +170,7 @@ public class FoodQueue
                                 {
                                     // adding to waiting queue
                                     WaitingQueue.insert(customer);
+                                    System.out.println("Customer added to the waiting queue");
                                 }
                                 // showing the low stocks alert if the burger count is less than 10
                                 Main.stockAlert();

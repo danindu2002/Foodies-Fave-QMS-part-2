@@ -1,25 +1,25 @@
 -------------------------------------->  Foodies Fave Queue Management System Data  <-------------------------------------- 
  
 
-Last Saved                     ; Fri Jul 14 23:17:10 IST 2023 
+Last Saved                     ; Sun Jul 16 21:34:57 IST 2023 
 
-Remaining Burger Count         : 24
-Reserved Burger Count          : 69
+Remaining Burger Count         : 50
+Reserved Burger Count          : 0
 Sold Burger Count              : 0
 Served Customers Count         : 0 
 
 ----------------------------------------------------- Cashier Queues ------------------------------------------------------ 
 
-Cashier 1   >   Rs. 03900      : A A - 2, D D - 4 
-Cashier 2   >   Rs. 26000      : B B - 33, E E - 3, G G - 4 
-Cashier 3   >   Rs. 14950      : C C - 4, F F - 4, H H - 5, I I - 6, J J - 4 
+Cashier 1   >   Rs. 00000      :  
+Cashier 2   >   Rs. 00000      :  
+Cashier 3   >   Rs. 00000      :  
 
-No.of Empty Slots              : 0 
+No.of Empty Slots              : 10 
 
 ------------------------------------------------------ Waiting Queue ------------------------------------------------------ 
 
-No.of Waiting Queue Customers  : 3 
+No.of Waiting Queue Customers  : 0 
 
-Customers in Waiting Queue     : Aa Aa - 2, Bb Bb - 3, C Cc - 3
+Customers in Waiting Queue     : 
 
                                                         * * * * * *
